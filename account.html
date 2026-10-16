@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#10251f">
+  <meta name="description" content="Create your Just Africa account to save places and connect with tourism businesses.">
+  <title>Your account — Just Africa</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <div class="announcement"><span class="announcement-dot"></span> A continent of wonder. One place to begin.</div>
+  <header class="site-header"><a class="brand" href="index.html" aria-label="Just Africa home"><span class="brand-mark">J<span>A</span></span><span class="brand-name">just<span>africa</span></span></a><a class="text-link" href="index.html">Back to discovery <span>→</span></a></header>
+  <main class="account-layout">
+    <section class="account-story"><p class="eyebrow eyebrow-light"><span class="eyebrow-line"></span> Your next story starts here</p><h1>Travel a little<br><em>closer.</em></h1><p>Save places you love, plan the journey ahead and connect with the people who know their corner of Africa best.</p><div class="account-story-note">54 countries. A lifetime of stories.</div></section>
+    <section class="account-panel">
+      <p class="eyebrow"><span class="eyebrow-line"></span> Welcome to Just Africa</p><h2 id="auth-heading">Come on in.</h2><p class="account-muted">Create an account or sign in to continue.</p>
+      <div class="auth-switch" role="group" aria-label="Account action"><button type="button" class="is-active" data-auth-mode="signin" aria-pressed="true">Sign in</button><button type="button" data-auth-mode="signup" aria-pressed="false">Create account</button></div>
+      <form id="auth-form" class="portal-form">
+        <label id="name-field" hidden>Full name<input name="display_name" autocomplete="name" maxlength="100" placeholder="Your name"></label>
+        <label>Email address<input name="email" type="email" autocomplete="email" required maxlength="254" placeholder="you@example.com"></label>
+        <label>Password<input name="password" type="password" autocomplete="current-password" minlength="8" required placeholder="At least 8 characters"></label>
+        <button type="submit" class="button button-dark portal-submit" id="auth-submit">Sign in <span>→</span></button>
+      </form>
+      <button type="button" id="forgot-password" class="subtle-action">Forgot your password?</button>
+      <p id="auth-message" class="portal-message" role="status" aria-live="polite"></p>
+      <p class="portal-legal">By continuing, you agree to use Just Africa responsibly. Account access is being introduced in stages; no bookings or payments are processed here.</p>
+    </section>
+  </main>
+  <footer class="site-footer"><div class="footer-bottom"><span>© <span data-year></span> Just Africa.</span><span>Travel thoughtfully. Leave a lighter footprint.</span></div></footer>
+  <script src="assets/js/supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/js/main.js" defer></script><script src="assets/js/portal.js" defer></script>
+</body></html>
