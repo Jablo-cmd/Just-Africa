@@ -101,8 +101,8 @@
         message("auth-message", error.message || "Password recovery could not be requested.", "error");
       }
     });
-    if (!clientReady()) message("auth-message", "Backend setup required: configure the project URL and publishable key after applying the database migration.", "error");
     syncMode("signin");
+    if (!clientReady()) message("auth-message", "Backend setup required: configure the project URL and publishable key after applying the database migration.", "error");
     if (recoveryMode) {
       modeButtons.forEach((button) => { button.hidden = true; });
       nameField.hidden = true;
