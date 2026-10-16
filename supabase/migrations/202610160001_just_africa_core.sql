@@ -315,7 +315,7 @@ with check ((select public.current_member_role()) in ('editor','admin'));
 create policy "verified businesses public or owner/admin" on public.businesses for select to anon, authenticated
 using (status = 'verified' or owner_id = (select auth.uid()) or (select public.is_admin()));
 create policy "owners create own businesses" on public.businesses for insert to authenticated
-with check (owner_id = (select auth.uid()) and status in ('draft','pending_review'));
+with check (owner_id = (select auth.uid()) and status in ('draft','pending_review') and (select public.current_member_role()) = 'business_owner');
 create policy "owners update own unverified businesses" on public.businesses for update to authenticated
 using ((owner_id = (select auth.uid()) and status in ('draft','pending_review','rejected')) or (select public.is_admin()))
 with check ((owner_id = (select auth.uid()) and status in ('draft','pending_review','rejected')) or (select public.is_admin()));
