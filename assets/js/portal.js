@@ -137,7 +137,7 @@
   }
 
   async function loadBusinesses(userId, role) {
-    const { data, error } = await client.from("businesses").select("id,name,status,business_type,description,country_code,city").order("created_at", { ascending: false });
+    const { data, error } = await client.from("businesses").select("id,owner_id,name,status,business_type,description,country_code,city").order("created_at", { ascending: false });
     const target = document.querySelector("#business-list");
     if (error) {
       target.innerHTML = '<p class="account-muted">Business records could not be loaded. Check your access policies.</p>';
@@ -178,7 +178,7 @@
       listingResult.data.length ? listingResult.data.map((l) => card(l.title, l.status, (l.businesses?.name || "Business") + " · " + l.listing_type + " · " + l.summary, actionButton("publish-listing", l.id, "Approve & publish", "action-positive") + actionButton("reject-listing", l.id, "Reject"))).join("") : '<p class="account-muted">No listings are waiting for review.</p>';
   }
 
-  document.querySelector("#toggle-business-form")?.addEventListener("click", () => show("business-form", document.querySelector("#business-form").hidden));
+  document.querySelector("#become-business-owner")?.addEventListener("click", async () => {\n    const button = document.querySelector("#become-business-owner");\n    button.disabled = true;\n    const { error } = await client.rpc("become_business_owner");\n    if (error) { button.disabled = false; return message("dashboard-message", error.message, "error"); }\n    window.location.reload();\n  });\n  document.querySelector("#toggle-business-form")?.addEventListener("click", () => show("business-form", document.querySelector("#business-form").hidden));
   document.querySelector("#business-form")?.addEventListener("submit", async (event) => {
     event.preventDefault();
     const form = event.currentTarget, data = new FormData(form);
