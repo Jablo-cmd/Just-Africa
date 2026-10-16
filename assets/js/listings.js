@@ -9,7 +9,8 @@
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
   })[char]);
   const typeLabels = { accommodation:"Accommodation", safari:"Safari", tour:"Tour", guide:"Local guide", restaurant:"Restaurant", transport:"Transport", experience:"Experience" };
-  let client = null, listings = [];
+  let client = null, listings = [], currentUserId = null;
+  const savedListingIds = new Set();
   if (config.url && config.publishableKey && window.supabase?.createClient) {
     client = window.supabase.createClient(config.url, config.publishableKey);
   }
@@ -31,23 +32,47 @@
       const place = [business.city,business.country_code].filter(Boolean).join(", ");
       const price = item.price_from === null || item.price_from === undefined ? "Contact for pricing" :
         (item.price_currency || "") + " " + Number(item.price_from).toLocaleString(undefined,{maximumFractionDigits:2}) + (item.price_unit ? " / " + item.price_unit : " from");
-      return '<article class="public-listing-card"><div class="public-listing-image"><span class="listing-type-label">' + escapeHtml(typeLabels[item.listing_type] || item.listing_type) + '</span><span class="verified-label">✓ Verified business</span></div><div class="public-listing-body"><p class="country-region">' + escapeHtml(place || item.destinations?.name || "Across Africa") + '</p><h2>' + escapeHtml(item.title) + '</h2><p class="public-listing-business">' + escapeHtml(business.name || "Local tourism business") + '</p><p class="public-listing-description">' + escapeHtml(item.summary || item.description || "Contact this business to learn more.") + '</p><div class="public-listing-foot"><strong>' + escapeHtml(price) + '</strong><button type="button" class="small-action action-positive" data-enquire="' + escapeHtml(item.id) + '">Ask about this <span aria-hidden="true">→</span></button></div></div></article>';
+      return '<article class="public-listing-card"><div class="public-listing-image"><span class="listing-type-label">' + escapeHtml(typeLabels[item.listing_type] || item.listing_type) + '</span><span class="verified-label">✓ Verified business</span></div><div class="public-listing-body"><p class="country-region">' + escapeHtml(place || item.destinations?.name || "Across Africa") + '</p><h2>' + escapeHtml(item.title) + '</h2><p class="public-listing-business">' + escapeHtml(business.name || "Local tourism business") + '</p><p class="public-listing-description">' + escapeHtml(item.summary || item.description || "Contact this business to learn more.") + '</p><div class="public-listing-foot"><strong>' + escapeHtml(price) + '</strong><div class="listing-card-actions"><button type="button" class="small-action" data-favourite="' + escapeHtml(item.id) + '">' + (savedListingIds.has(item.id) ? "Saved ✓" : "♡ Save") + '</button><button type="button" class="small-action action-positive" data-enquire="' + escapeHtml(item.id) + '">Ask about this <span aria-hidden="true">→</span></button></div></div></div></article>';
     }).join("");
     empty.hidden = visible.length > 0;
   };
   if (!client) {
     say("The directory is ready, but the Supabase project has not been connected. Once the backend is configured, verified live listings will appear here.", "error");
   } else {
-    client.from("listings").select("id,title,summary,description,listing_type,price_from,price_currency,price_unit,business_id,businesses(name,city,country_code),destinations(name)").eq("status","published").order("published_at",{ascending:false})
-      .then(({data,error}) => {
-        if (error) return say("Listings could not be loaded. Check that the database migration and public read policies are active.", "error");
-        listings = data || [];
-        say(listings.length ? "Showing " + listings.length + " approved listing" + (listings.length === 1 ? "" : "s") + " from verified tourism businesses." : "No approved listings have been published yet. The directory will populate as businesses are verified.", "");
-        render();
-      });
+    (async () => {
+      const { data: sessionData } = await client.auth.getSession();
+      currentUserId = sessionData.session?.user?.id || null;
+      if (currentUserId) {
+        const { data: favourites } = await client.from("favourites").select("listing_id").eq("user_id", currentUserId);
+        (favourites || []).forEach((row) => savedListingIds.add(row.listing_id));
+      }
+      const { data, error } = await client.from("listings").select("id,title,summary,description,listing_type,price_from,price_currency,price_unit,business_id,businesses(name,city,country_code),destinations(name)").eq("status","published").order("published_at",{ascending:false});
+      if (error) return say("Listings could not be loaded. Check that the database migration and public read policies are active.", "error");
+      listings = data || [];
+      say(listings.length ? "Showing " + listings.length + " approved listing" + (listings.length === 1 ? "" : "s") + " from verified tourism businesses." : "No approved listings have been published yet. The directory will populate as businesses are verified.", "");
+      render();
+    })().catch((error) => say(error.message || "The directory could not be loaded.", "error"));
   }
   ["listing-query","listing-type","listing-country"].forEach((id) => document.getElementById(id).addEventListener(id === "listing-query" ? "input" : "change", render));
-  grid.addEventListener("click", (event) => {
+  grid.addEventListener("click", async (event) => {
+    const saveButton = event.target.closest("[data-favourite]");
+    if (saveButton) {
+      if (!client) return say("Saving places will be available once the backend is connected.", "error");
+      if (!currentUserId) return window.location.assign("account.html?next=listings");
+      const listingId = saveButton.dataset.favourite;
+      saveButton.disabled = true;
+      if (savedListingIds.has(listingId)) {
+        const { error } = await client.from("favourites").delete().eq("user_id",currentUserId).eq("listing_id",listingId);
+        if (error) { saveButton.disabled = false; return say(error.message,"error"); }
+        savedListingIds.delete(listingId);
+      } else {
+        const { error } = await client.from("favourites").upsert({user_id:currentUserId,listing_id:listingId},{onConflict:"user_id,listing_id"});
+        if (error) { saveButton.disabled = false; return say(error.message,"error"); }
+        savedListingIds.add(listingId);
+      }
+      render();
+      return;
+    }
     const button = event.target.closest("[data-enquire]");
     if (!button) return;
     const item = listings.find((listing) => listing.id === button.dataset.enquire);
