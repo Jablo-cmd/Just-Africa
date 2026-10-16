@@ -2,7 +2,7 @@
 
 **Discover the continent. Experience the extraordinary.**
 
-Just Africa is an Africa-wide tourism discovery platform concept featuring destinations, travel inspiration, accommodation and safari experiences, and future tourism-business partnerships.
+Just Africa is an Africa-wide tourism discovery platform featuring destinations, travel inspiration, accommodation and safari experiences, and future tourism-business partnerships.
 
 ## Current MVP
 
@@ -12,10 +12,11 @@ Just Africa is an Africa-wide tourism discovery platform concept featuring desti
 - Early-stage tourism partner information page
 - Mobile navigation, accessible controls, reduced-motion support and responsive layouts
 - Page-specific metadata and lightweight static HTML for search-engine accessibility
+- GitHub Actions workflow for static deployment to GitHub Pages
 
 ## Technology
 
-The first version uses semantic HTML, CSS and vanilla JavaScript. It has no build step, framework dependency, database, API key or backend requirement. This keeps the initial site easy to review and deploy as a static website.
+The first version uses semantic HTML, CSS and vanilla JavaScript. It has no build step, framework dependency, database, API key or backend requirement.
 
 ## Run locally
 
@@ -23,7 +24,9 @@ Open `index.html` in a browser, or serve the repository root with any static HTT
 
 ## Deployment
 
-The site can be deployed to GitHub Pages or another static host. Configure the host to publish the repository root (the folder containing `index.html`). Connect a custom domain only after domain ownership and DNS settings have been confirmed.
+The workflow in `.github/workflows/deploy-pages.yml` deploys the repository root when changes reach `main`.
+
+After merging the initial site, open **Settings → Pages** and select **GitHub Actions** as the build and deployment source. The workflow will then publish the site on pushes to `main`. A custom domain can be connected after domain ownership and DNS settings have been confirmed.
 
 ## Before public launch
 
