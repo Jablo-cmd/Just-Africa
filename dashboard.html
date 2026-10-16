@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#10251f">
+  <meta name="description" content="Manage your Just Africa profile, tourism business listings and enquiries.">
+  <title>Your dashboard — Just Africa</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <div class="announcement"><span class="announcement-dot"></span> A continent of wonder. One place to begin.</div>
+  <header class="site-header"><a class="brand" href="index.html" aria-label="Just Africa home"><span class="brand-mark">J<span>A</span></span><span class="brand-name">just<span>africa</span></span></a><nav class="dashboard-nav"><a class="text-link" href="destinations.html">Explore places <span>→</span></a><button type="button" id="sign-out" class="subtle-action">Sign out</button></nav></header>
+  <main class="dashboard-layout">
+    <section class="dashboard-heading"><p class="eyebrow"><span class="eyebrow-line"></span> Your Just Africa space</p><h1 id="dashboard-title">Your next chapter.</h1><p id="dashboard-subtitle">Manage your profile and your travel connections.</p></section>
+    <p id="dashboard-message" class="portal-message" role="status" aria-live="polite"></p>
+    <section id="dashboard-content" hidden>
+      <div class="dashboard-welcome"><div><span class="country-region">SIGNED IN AS</span><h2 id="profile-name">Traveller</h2><p id="profile-role" class="account-muted"></p></div><a href="destinations.html" class="button button-dark">Discover destinations <span>↗</span></a></div>
+      <section id="traveller-section" class="dashboard-section" hidden><div class="dashboard-section-heading"><div><p class="eyebrow"><span class="eyebrow-line"></span> Your collection</p><h2>Saved <em>places.</em></h2></div></div><div id="favourites-list" class="dashboard-list"><p class="account-muted">Your saved listings will appear here.</p></div></section>
+      <section id="business-section" class="dashboard-section" hidden>
+        <div class="dashboard-section-heading"><div><p class="eyebrow"><span class="eyebrow-line"></span> Tourism business portal</p><h2>Your <em>businesses.</em></h2></div><button type="button" class="button button-dark" id="toggle-business-form">Add a business <span>＋</span></button></div>
+        <form id="business-form" class="portal-form portal-form-grid" hidden>
+          <label>Business name<input name="name" required maxlength="160" placeholder="Your lodge, tour company or guide service"></label>
+          <label>Business type<select name="business_type" required><option value="accommodation">Accommodation</option><option value="safari_operator">Safari operator</option><option value="tour_operator">Tour operator</option><option value="local_guide">Local guide</option><option value="restaurant">Restaurant</option><option value="transport">Transport</option><option value="tourism_organisation">Tourism organisation</option><option value="other">Other</option></select></label>
+          <label>Country code<input name="country_code" required pattern="[A-Za-z]{2}" minlength="2" maxlength="2" placeholder="ZA"></label>
+          <label>City or area<input name="city" maxlength="100" placeholder="Cape Town"></label>
+          <label class="form-span">Short description<textarea name="description" rows="3" maxlength="3000" placeholder="Tell travellers what makes your business special."></textarea></label>
+          <label>Public contact email<input name="email" type="email" maxlength="254" placeholder="hello@example.com"></label>
+          <label>Website URL<input name="website_url" type="url" maxlength="500" placeholder="https://example.com"></label>
+          <div class="form-span"><button class="button button-dark" type="submit">Submit for review <span>→</span></button></div>
+        </form>
+        <div id="business-list" class="dashboard-list"></div>
+        <div id="listing-composer" class="dashboard-subpanel" hidden><h3>Create a listing</h3><form id="listing-form" class="portal-form portal-form-grid"><input type="hidden" name="business_id"><label>Listing title<input name="title" required maxlength="180"></label><label>Type<select name="listing_type" required><option value="accommodation">Accommodation</option><option value="safari">Safari</option><option value="tour">Tour</option><option value="guide">Local guide</option><option value="restaurant">Restaurant</option><option value="transport">Transport</option><option value="experience">Experience</option></select></label><label class="form-span">Description<textarea name="description" rows="4" maxlength="5000" required></textarea></label><label>Starting price (optional)<input name="price_from" type="number" min="0" step="0.01"></label><label>Currency<input name="price_currency" maxlength="3" pattern="[A-Za-z]{3}" placeholder="ZAR"></label><div class="form-span"><button class="button button-dark" type="submit">Submit listing for review <span>→</span></button></div></form></div>
+        <section class="dashboard-section"><div class="dashboard-section-heading"><div><p class="eyebrow"><span class="eyebrow-line"></span> Guest messages</p><h2>Enquiries.</h2></div></div><div id="inquiry-list" class="dashboard-list"><p class="account-muted">Enquiries for your businesses will appear here.</p></div></section>
+      </section>
+      <section id="admin-section" class="dashboard-section" hidden><p class="eyebrow"><span class="eyebrow-line"></span> Platform controls</p><h2>Review & <em>moderation.</em></h2><p class="account-muted">Only accounts explicitly granted the admin role in the trusted database environment can see these controls.</p><h3>Businesses awaiting review</h3><div id="admin-business-list" class="dashboard-list"></div><h3>Listings awaiting review</h3><div id="admin-listing-list" class="dashboard-list"></div></section>
+    </section>
+  </main>
+  <footer class="site-footer"><div class="footer-bottom"><span>© <span data-year></span> Just Africa.</span><span>Platform in staged development.</span></div></footer>
+  <script src="assets/js/supabase-config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/main.js" defer></script><script src="assets/js/portal.js" defer></script>
+</body></html>
