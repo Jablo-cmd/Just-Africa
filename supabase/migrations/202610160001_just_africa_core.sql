@@ -336,6 +336,10 @@ create policy "business replies to inquiry" on public.inquiries for update to au
 using (exists (select 1 from public.businesses b where b.id=business_id and b.owner_id=(select auth.uid())) or (select public.is_admin()))
 with check (exists (select 1 from public.businesses b where b.id=business_id and b.owner_id=(select auth.uid())) or (select public.is_admin()));
 
+-- A business may update the response/status fields, not rewrite a traveller's original message.
+revoke update on public.inquiries from authenticated;
+grant update (status, business_reply, replied_at) on public.inquiries to authenticated;
+
 create policy "published articles public" on public.articles for select to anon, authenticated
 using ((status='published' and published_at <= now()) or (author_id=(select auth.uid())) or (select public.current_member_role()) in ('editor','admin'));
 create policy "authors create articles" on public.articles for insert to authenticated
