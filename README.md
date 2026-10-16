@@ -2,42 +2,55 @@
 
 **Discover the continent. Experience the extraordinary.**
 
-Just Africa is an Africa-wide tourism discovery platform featuring destinations, travel inspiration, accommodation and safari experiences, and future tourism-business partnerships.
+Just Africa is being built as an Africa-wide tourism discovery platform connecting travellers with destinations, verified accommodation, safari and tour operators, local guides and useful travel editorial.
 
-## Current MVP
+## Current build
 
-- Responsive editorial homepage with destination discovery sections
-- Searchable destination directory with text search and travel-style filters
-- Travel guides landing page
-- Early-stage tourism partner information page
-- Mobile navigation, accessible controls, reduced-motion support and responsive layouts
-- Page-specific metadata and lightweight static HTML for search-engine accessibility
-- GitHub Actions workflow for static deployment to GitHub Pages
+### Public website
+- Responsive editorial homepage and destination directory
+- Searchable destination cards and travel-style filters
+- Travel guides and partner information pages
+- Accessible mobile navigation, reduced-motion support and page metadata
+
+### Backend foundation (new)
+- Supabase/Postgres schema for profiles, destinations, businesses, listings, listing images, favourites, enquiries, articles, sponsorships, affiliate click tracking and reports
+- Row-level security policies for public discovery and private owner/traveller data
+- Business verification and listing-review states
+- Initial destination seed data and schema assertion queries
+- Security model and phased product roadmap
+
+**Important:** The backend schema has been committed but has not been applied to a live Supabase project. Authentication flows, owner/admin dashboards, email notifications, file upload policies, billing, affiliate integrations and booking workflows are not live yet.
 
 ## Technology
 
-The first version uses semantic HTML, CSS and vanilla JavaScript. It has no build step, framework dependency, database, API key or backend requirement.
+The public MVP currently uses semantic HTML, CSS and vanilla JavaScript. The backend foundation targets Supabase Auth and PostgreSQL. No service-role key or database credentials belong in the browser or repository.
 
-## Run locally
+## Run the public site locally
 
 Open `index.html` in a browser, or serve the repository root with any static HTTP server.
 
+## Backend setup
+
+Read:
+- [Supabase setup](supabase/README.md)
+- [Security model](docs/SECURITY_MODEL.md)
+- [Platform roadmap](docs/PLATFORM_ROADMAP.md)
+- [Environment template](.env.example)
+
+Apply the migration only to a dedicated new/test project after reviewing it. Configure Auth, private Storage policies and project settings, then verify the schema and RLS policies as anonymous and authenticated users before using real partner data. The SQL assertions are in `supabase/tests/core_schema_assertions.sql`.
+
 ## Deployment
 
-The workflow in `.github/workflows/deploy-pages.yml` deploys the repository root when changes reach `main`.
+The existing GitHub Actions workflow deploys the static root to GitHub Pages when changes reach `main`. After merging, set **Settings → Pages → Source → GitHub Actions**. Domain and DNS configuration are separate and require a domain you control.
 
-After merging the initial site, open **Settings → Pages** and select **GitHub Actions** as the build and deployment source. The workflow will then publish the site on pushes to `main`. A custom domain can be connected after domain ownership and DNS settings have been confirmed.
+## Commercial launch checklist
 
-## Before public launch
+- Verify destination facts, image licensing and attribution requirements
+- Implement and test sign-in, onboarding, listing review and enquiry notifications end-to-end
+- Configure production domain, canonical URLs, sitemap and robots rules
+- Publish privacy, data-retention, account deletion and advertising/affiliate disclosures
+- Add rate limiting, abuse controls, monitoring, backup and restore testing
+- Integrate payment providers only after pricing, refund and legal terms are defined
+- Test accessibility, performance, broken links and Core Web Vitals
 
-- Verify all destination facts, image rights and image attribution requirements
-- Replace or confirm imagery and add descriptive, country-specific editorial content
-- Configure the production domain, canonical URLs, sitemap and robots rules
-- Add a privacy policy and cookie disclosure if required by analytics or advertising tools
-- Connect and test any contact, newsletter, affiliate or booking workflows before advertising them
-- Apply for advertising and affiliate programmes only after the site meets their current requirements
-- Test mobile performance, accessibility, broken links and Core Web Vitals
-
-## Business model direction
-
-Potential future revenue streams include display advertising, accommodation and tour referrals, clearly labelled sponsored placements, and direct tourism partnerships. No booking, payment, lead-capture or advertising integration is active in this MVP.
+Potential revenue streams include disclosed affiliate referrals, clearly labelled sponsorships, business subscriptions and advertising. None should be represented as active until the integration works and has been verified.
