@@ -9,7 +9,7 @@ The site currently ships as static HTML. This folder establishes the database fo
 3. Review the SQL and run Supabase Database Linter/advisors before accepting real users.
 4. Configure Auth providers, email verification, redirect URLs, SMTP, abuse protection and password policies in the dashboard.
 5. Create a private Storage bucket for business/listing uploads and add narrowly scoped policies. Do not make uploads public by default.
-6. Set the frontend's project URL and publishable key using the configuration described in `.env.example`. Never expose a secret/service-role key in browser code.
+6. For the current static GitHub Pages frontend, set `url` and `publishableKey` in `assets/js/supabase-config.js`. The publishable key is intentionally public. Never expose a secret/service-role key in browser code. `.env.example` is a template for a future Vite build, not read by the current static pages.
 7. Promote the first admin only through a trusted, authenticated database/admin procedure. Do not allow public sign-up metadata to set privileged roles.
 8. Verify RLS by testing as anonymous, traveller, business owner, editor and admin before launch.
 
@@ -25,9 +25,13 @@ The site currently ships as static HTML. This folder establishes the database fo
 - Affiliate click attribution
 - User reports and moderation state
 
+## Current frontend status
+
+The repository now includes scaffold-level account sign-up/sign-in/password recovery, a role-aware dashboard, business registration, listing submission, admin approval controls, and a public listing/enquiry page. These depend on this migration and a configured project. They have passed JavaScript syntax checks only; they have **not** been exercised against a live Supabase instance, and are not production-verified.
+
 ## Important launch gaps
 
-The schema is the first backend milestone, not the complete product. Frontend auth, owner dashboards, moderation workflows, enquiry delivery/email, signed image uploads, billing, affiliate partner integrations, analytics consent, rate limiting, and operational monitoring still need implementation and testing. No real booking or payment is enabled by this migration.
+Email delivery/notification, private signed image uploads, billing, affiliate partner integrations, analytics consent, rate limiting, moderation audit logs and operational monitoring still need implementation and testing. No real booking or payment is enabled by this migration.
 
 ## Safety notes
 
