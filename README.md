@@ -10,6 +10,8 @@ Just Africa is being built as an Africa-wide tourism discovery platform connecti
 - Responsive editorial homepage and destination directory
 - Searchable destination cards and travel-style filters
 - Travel guides and partner information pages
+- Verified stays and experiences directory with search/type/country filters and traveller enquiry form
+- Supabase-backed account access, password recovery, business registration, listing submission and admin review UI (requires backend configuration)
 - Accessible mobile navigation, reduced-motion support and page metadata
 
 ### Backend foundation (new)
@@ -19,7 +21,7 @@ Just Africa is being built as an Africa-wide tourism discovery platform connecti
 - Initial destination seed data and schema assertion queries
 - Security model and phased product roadmap
 
-**Important:** The backend schema has been committed but has not been applied to a live Supabase project. Authentication flows, owner/admin dashboards, email notifications, file upload policies, billing, affiliate integrations and booking workflows are not live yet.
+**Important:** The backend schema and account/business/admin/listing interfaces are committed but have not been connected to a live Supabase project. The front-end flows are code-complete at scaffold level; they are not usable until the migration is applied, the project is configured, RLS is tested and end-to-end behaviour is verified. Email notifications, file upload policies, billing, affiliate integrations and booking workflows are not live.
 
 ## Technology
 
@@ -37,7 +39,7 @@ Read:
 - [Platform roadmap](docs/PLATFORM_ROADMAP.md)
 - [Environment template](.env.example)
 
-Apply the migration only to a dedicated new/test project after reviewing it. Configure Auth, private Storage policies and project settings, then verify the schema and RLS policies as anonymous and authenticated users before using real partner data. The SQL assertions are in `supabase/tests/core_schema_assertions.sql`.
+Apply the migration only to a dedicated new/test project after reviewing it. For this static GitHub Pages build, place the project URL and **publishable** key in `assets/js/supabase-config.js` (that key is public by design; never use a service-role/secret key). Configure Auth email verification, redirect URLs, SMTP and abuse protection, then verify the schema and RLS policies as anonymous and authenticated users before using real partner data. The SQL assertions are in `supabase/tests/core_schema_assertions.sql`. `.env.example` documents the variables for a future Vite-based build; the static pages do not read `.env` files.
 
 ## Deployment
 
