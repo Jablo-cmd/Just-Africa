@@ -261,9 +261,30 @@ $$;
 
 create or replace function public.is_admin()
 returns boolean language sql stable security definer set search_path = ''
-as $$
+as $
   select coalesce(public.current_member_role() = 'admin', false)
-$$;
+$;
+
+-- A member may opt into business-owner tools, but cannot grant themselves editor/admin access.
+create or replace function public.become_business_owner()
+returns void language plpgsql security definer set search_path = ''
+as $
+declare
+  existing_role public.member_role;
+begin
+  if (select auth.uid()) is null then
+    raise exception 'Authentication is required';
+  end if;
+  select p.role into existing_role from public.profiles p where p.id = (select auth.uid());
+  if existing_role = 'business_owner' then
+    return;
+  end if;
+  if existing_role <> 'traveller' then
+    raise exception 'This account cannot change to business owner';
+  end if;
+  update public.profiles set role = 'business_owner' where id = (select auth.uid());
+end;
+$;
 
 alter table public.profiles enable row level security;
 alter table public.destinations enable row level security;
@@ -367,5 +388,7 @@ using ((select public.is_admin())) with check ((select public.is_admin()));
 -- Prevent clients from promoting themselves through direct table updates.
 revoke all on function public.current_member_role() from public;
 revoke all on function public.is_admin() from public;
+revoke all on function public.become_business_owner() from public;
 grant execute on function public.current_member_role() to anon, authenticated;
 grant execute on function public.is_admin() to anon, authenticated;
+grant execute on function public.become_business_owner() to authenticated;
