@@ -1,7 +1,7 @@
 -- Run after applying the core migration in a disposable/test Supabase project.
 -- Each query should return the expected rows; any missing item indicates setup is incomplete.
 
-select table_name, row_security
+select t.table_name, c.relrowsecurity as row_level_security_enabled
 from information_schema.tables t
 join pg_class c on c.relname = t.table_name
 join pg_namespace n on n.oid = c.relnamespace and n.nspname = t.table_schema
