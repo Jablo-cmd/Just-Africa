@@ -1,0 +1,33 @@
+name: Validate Just Africa
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main, feat/just-africa-mvp]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check JavaScript syntax
+        run: |
+          node --check assets/js/main.js
+          node --check assets/js/portal.js
+          node --check assets/js/listings.js
+      - name: Check whitespace errors
+        run: git diff --check origin/main...HEAD
+      - name: Validate platform structure and RLS baseline
+        run: node scripts/validate-platform.mjs
