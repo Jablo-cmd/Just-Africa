@@ -230,6 +230,28 @@ $$;
 
 create trigger on_auth_user_created after insert on auth.users for each row execute function public.handle_new_user();
 
+-- Non-admin owners may submit listings for review but cannot publish them by direct API calls.
+create or replace function public.guard_listing_publication()
+returns trigger language plpgsql set search_path = ''
+as $
+begin
+  if (coalesce(public.current_member_role()::text, '') <> 'admin') then
+    if tg_op = 'INSERT' and new.status not in ('draft','pending_review') then
+      raise exception 'Listings must be submitted for review before publication';
+    end if;
+    if tg_op = 'UPDATE' and new.status is distinct from old.status
+       and new.status not in ('draft','pending_review') then
+      raise exception 'Only platform administrators can approve or publish listings';
+    end if;
+  end if;
+  return new;
+end;
+$;
+
+create trigger guard_listing_publication before insert or update of status on public.listings
+for each row execute function public.guard_listing_publication();
+
+
 -- Helper functions read the protected profiles table without creating recursive RLS policies.
 create or replace function public.current_member_role()
 returns public.member_role language sql stable security definer set search_path = ''
@@ -306,7 +328,7 @@ using (user_id = (select auth.uid())) with check (user_id = (select auth.uid()))
 create policy "traveller creates inquiry" on public.inquiries for insert to anon, authenticated
 with check (
   (traveller_id is null or traveller_id = (select auth.uid()))
-  and exists (select 1 from public.listings l join public.businesses b on b.id=l.business_id where l.id=listing_id and l.business_id=business_id and l.status='published' and b.status='verified')
+  and exists (select 1 from public.listings l join public.businesses b on b.id=l.business_id where l.id=listing_id and l.business_id=inquiries.business_id and l.status='published' and b.status='verified')
 );
 create policy "traveller or business reads inquiry" on public.inquiries for select to authenticated
 using (traveller_id = (select auth.uid()) or exists (select 1 from public.businesses b where b.id=business_id and b.owner_id=(select auth.uid())) or (select public.is_admin()));
