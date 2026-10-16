@@ -78,7 +78,8 @@
         } else {
           const { error } = await client.auth.signInWithPassword({ email, password: secret });
           if (error) throw error;
-          window.location.href = "dashboard.html";
+          const next = new URLSearchParams(window.location.search).get("next");
+          window.location.href = next === "listings" ? "listings.html" : "dashboard.html";
         }
       } catch (error) {
         message("auth-message", error.message || "We could not complete that request. Please try again.", "error");
