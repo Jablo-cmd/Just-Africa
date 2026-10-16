@@ -363,5 +363,5 @@ using ((select public.is_admin())) with check ((select public.is_admin()));
 -- Prevent clients from promoting themselves through direct table updates.
 revoke all on function public.current_member_role() from public;
 revoke all on function public.is_admin() from public;
-grant execute on function public.current_member_role() to authenticated;
-grant execute on function public.is_admin() to authenticated;
+grant execute on function public.current_member_role() to anon, authenticated;
+grant execute on function public.is_admin() to anon, authenticated;
