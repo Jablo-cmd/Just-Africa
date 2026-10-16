@@ -233,7 +233,7 @@ create trigger on_auth_user_created after insert on auth.users for each row exec
 -- Non-admin owners may submit listings for review but cannot publish them by direct API calls.
 create or replace function public.guard_listing_publication()
 returns trigger language plpgsql set search_path = ''
-as $
+as $$
 begin
   if (coalesce(public.current_member_role()::text, '') <> 'admin') then
     if tg_op = 'INSERT' and new.status not in ('draft','pending_review') then
@@ -246,7 +246,7 @@ begin
   end if;
   return new;
 end;
-$;
+$$;
 
 create trigger guard_listing_publication before insert or update of status on public.listings
 for each row execute function public.guard_listing_publication();
@@ -261,14 +261,14 @@ $$;
 
 create or replace function public.is_admin()
 returns boolean language sql stable security definer set search_path = ''
-as $
+as $$
   select coalesce(public.current_member_role() = 'admin', false)
-$;
+$$;
 
 -- A member may opt into business-owner tools, but cannot grant themselves editor/admin access.
 create or replace function public.become_business_owner()
 returns void language plpgsql security definer set search_path = ''
-as $
+as $$
 declare
   existing_role public.member_role;
 begin
@@ -284,7 +284,7 @@ begin
   end if;
   update public.profiles set role = 'business_owner' where id = (select auth.uid());
 end;
-$;
+$$;
 
 alter table public.profiles enable row level security;
 alter table public.destinations enable row level security;
