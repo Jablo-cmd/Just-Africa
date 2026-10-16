@@ -17,6 +17,7 @@
 
   const authForm = document.querySelector("#auth-form");
   if (authForm) {
+    const recoveryMode = new URLSearchParams(window.location.search).get("recovery") === "1";
     let mode = "signin";
     const modeButtons = [...document.querySelectorAll("[data-auth-mode]")];
     const nameField = document.querySelector("#name-field");
@@ -44,6 +45,19 @@
       const data = new FormData(authForm);
       const email = String(data.get("email") || "").trim();
       const secret = String(data.get("password") || "");
+      if (recoveryMode) {
+        submit.disabled = true;
+        try {
+          const { error } = await client.auth.updateUser({ password: secret });
+          if (error) throw error;
+          window.location.href = "account.html?updated=1";
+        } catch (error) {
+          message("auth-message", error.message || "The password could not be updated. Request a fresh recovery link.", "error");
+        } finally {
+          submit.disabled = false;
+        }
+        return;
+      }
       submit.disabled = true;
       message("auth-message", mode === "signup" ? "Creating your account…" : "Signing you in…");
       try {
@@ -88,6 +102,18 @@
     });
     if (!clientReady()) message("auth-message", "Backend setup required: configure the project URL and publishable key after applying the database migration.", "error");
     syncMode("signin");
+    if (recoveryMode) {
+      modeButtons.forEach((button) => { button.hidden = true; });
+      nameField.hidden = true;
+      authForm.elements.email.closest("label").hidden = true;
+      heading.textContent = "Choose a new password.";
+      submit.innerHTML = "Update password <span>→</span>";
+      password.autocomplete = "new-password";
+      document.querySelector("#forgot-password").hidden = true;
+    }
+    if (new URLSearchParams(window.location.search).get("updated") === "1") {
+      message("auth-message", "Your password has been updated. You can now sign in.", "success");
+    }
   }
 
   const dashboard = document.querySelector("#dashboard-content");
