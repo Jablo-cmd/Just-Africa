@@ -36,10 +36,7 @@
 
   function filterDestinations() {
     if (!cards.length) return;
-    const query = (search?.value || new URLSearchParams(window.location.search).get("q") || "").trim().toLowerCase();
-    if (search && !search.value && new URLSearchParams(window.location.search).has("q")) {
-      search.value = new URLSearchParams(window.location.search).get("q");
-    }
+    const query = (search ? search.value : (new URLSearchParams(window.location.search).get("q") || "")).trim().toLowerCase();
     let visibleCount = 0;
     cards.forEach((card) => {
       const matchesText = !query || (card.dataset.search || "").toLowerCase().includes(query) ||
