@@ -15,13 +15,16 @@ An Africa-wide discovery platform connecting travellers to verified accommodatio
 - [ ] Set production domain and deploy workflow
 
 ### Phase 2 — Working product
-- [ ] Email/password or magic-link sign-up, verification, sign-in, sign-out and password recovery
-- [ ] Traveller profile and saved listings
-- [ ] Business onboarding and owner dashboard
-- [ ] Create/edit listings, upload images safely and submit for review
-- [ ] Admin/editor dashboard for verification, moderation and editorial publishing
-- [ ] Enquiry form with validation, spam controls and reliable email notifications
-- [ ] Dynamic destination and listing pages backed by Supabase
+- [x] Scaffold email/password sign-up, sign-in, sign-out and password recovery
+- [x] Traveller dashboard shell and saved-listing controls
+- [x] Business onboarding and owner dashboard shell
+- [x] Create listing and submit for review workflow
+- [x] Admin business verification and listing approval controls
+- [x] Public verified-listing directory with filters and enquiry submission
+- [ ] Connect the UI to a dedicated Supabase project and verify every flow end-to-end
+- [ ] Configure email delivery/notifications and abuse protection
+- [ ] Add secure listing image uploads and business/listing editing
+- [ ] Complete editor tools for destination and article publishing
 
 ### Phase 3 — Trust, discovery and SEO
 - [ ] Verified status rules and visible verification explanation
