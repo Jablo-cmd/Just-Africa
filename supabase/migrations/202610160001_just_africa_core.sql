@@ -385,6 +385,22 @@ with check (listing_id is not null and (reporter_id is null or reporter_id=(sele
 create policy "admins manage reports" on public.reports for all to authenticated
 using ((select public.is_admin())) with check ((select public.is_admin()));
 
+-- Explicit Data API grants: RLS still controls which rows each role can access.
+-- This avoids relying on project-specific default privileges for newly created tables.
+grant usage on schema public to anon, authenticated;
+
+grant select on public.destinations, public.businesses, public.listings, public.listing_images, public.articles, public.sponsorships to anon, authenticated;
+grant select, update on public.profiles to authenticated;
+grant insert, update, delete on public.destinations, public.businesses, public.listings, public.listing_images, public.articles, public.sponsorships to authenticated;
+grant select, insert, update, delete on public.favourites to authenticated;
+grant select on public.inquiries to authenticated;
+grant insert on public.inquiries to anon, authenticated;
+grant update (status, business_reply, replied_at) on public.inquiries to authenticated;
+grant insert on public.affiliate_clicks to anon, authenticated;
+grant select on public.affiliate_clicks to authenticated;
+grant insert on public.reports to anon, authenticated;
+grant select, update, delete on public.reports to authenticated;
+
 -- Prevent clients from promoting themselves through direct table updates.
 revoke all on function public.current_member_role() from public;
 revoke all on function public.is_admin() from public;
