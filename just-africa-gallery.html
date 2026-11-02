@@ -1,0 +1,197 @@
+<!--
+JUST AFRICA GALLERY SECTION (paste-ready)
+
+HOW TO USE
+1. Easiest: save this whole file in your repo as gallery.html. It links your existing assets/css/styles.css
+   and assets/js/main.js, so it matches the site. Add a menu link to gallery.html later.
+2. Or copy the <style>
+.ja-wrap{--bark:#261d14;--paper:#eef0e4;--muted:#5c5a47;--forest:#1d3a29;--deep:#14291d;--leaf:#3f6b3a;--gold:#d9a441;--sand:#e6dcc0;
+  font-family:'DM Sans',system-ui,sans-serif;color:var(--bark);background:var(--paper)}
+.ja-wrap *{box-sizing:border-box}
+.ja-wrap :focus-visible{outline:3px solid var(--leaf);outline-offset:2px}
+.ja-hero :focus-visible,.ja-stays :focus-visible{outline-color:var(--gold)}
+
+/* Hero: dusk savanna, with a photo laid over it when hero.jpg exists */
+.ja-hero{position:relative;min-height:72vh;display:flex;align-items:flex-end;overflow:hidden;color:#fff6e2;
+  padding:clamp(1.5rem,5vw,4rem) clamp(1.5rem,5vw,4rem) clamp(5rem,14vw,9rem);
+  background:linear-gradient(180deg,rgba(20,41,29,.2) 0%,rgba(20,41,29,.7) 100%),url("assets/images/hero.jpg") center/cover,
+  linear-gradient(180deg,#e9b25a 0%,#b9783a 38%,#5d6a35 72%,#1d3a29 100%)}
+.ja-hero>div{position:relative;z-index:1}
+.ja-hero h1{font-family:'Playfair Display',Georgia,serif;font-weight:600;font-size:clamp(2.4rem,8vw,5rem);line-height:1.02;margin:0 0 .7rem;max-width:13ch;text-wrap:balance}
+.ja-hero p{margin:0;max-width:44ch;font-size:1.08rem;line-height:1.55;color:#f4e8cc}
+.ja-horizon{position:absolute;left:0;right:0;bottom:-1px;width:100%;height:auto;display:block}
+
+/* Filters */
+.ja-filters{padding:1.25rem clamp(1rem,4vw,3rem);display:grid;gap:.7rem;background:var(--paper);border-bottom:1px solid #cfd3bd}
+.ja-row{display:flex;gap:.5rem;overflow-x:auto;padding-bottom:.25rem;-webkit-overflow-scrolling:touch}
+.ja-row button{flex:none;display:inline-flex;align-items:center;font:inherit;font-size:.95rem;padding:.55rem 1.05rem;border-radius:999px;
+  border:1.5px solid #b9bda3;background:transparent;color:var(--bark);cursor:pointer;min-height:44px}
+.ja-row button[aria-pressed="true"]{background:var(--forest);color:#fff6e2;border-color:var(--forest)}
+.ja-row button[data-filter=r]:not([data-value=all])::before{content:"";width:9px;height:9px;border-radius:50%;margin-right:.5rem;background:var(--dot)}
+.ja-row [data-value=east]{--dot:#d9a441}.ja-row [data-value=west]{--dot:#4fa08a}
+.ja-row [data-value=central]{--dot:#5aa14a}.ja-row [data-value=southern]{--dot:#c0693a}
+
+/* Cards */
+.ja-grid{display:grid;gap:2rem 1.4rem;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));grid-auto-flow:dense;padding:2.2rem clamp(1rem,4vw,3rem)}
+.ja-card{margin:0}
+.ja-card[hidden]{display:none}
+.ja-card[data-region=east]{--rc:#c8962e}.ja-card[data-region=west]{--rc:#2f7a6b}
+.ja-card[data-region=central]{--rc:#3f7d3a}.ja-card[data-region=southern]{--rc:#a4572f}
+.ja-card figure{position:relative;margin:0;height:230px;overflow:hidden;border-radius:4px 42px 4px 42px;
+  background:linear-gradient(160deg,color-mix(in srgb,var(--rc) 60%,#14291d),#14291d)}
+.ja-card figure::after{content:"";position:absolute;left:0;right:0;bottom:0;height:5px;background:var(--rc)}
+.ja-card img{width:100%;height:100%;object-fit:cover;display:block}
+.ja-card h3{font-family:'Playfair Display',Georgia,serif;font-weight:600;font-size:1.4rem;margin:.9rem 0 .15rem;line-height:1.2;color:var(--forest)}
+.ja-card p{line-height:1.55;max-width:60ch;margin:0 0 .3rem}
+.ja-card .ja-meta{margin:0 0 .45rem;font-size:.9rem;font-weight:600;color:var(--muted)}
+.ja-nature{font-size:.92rem;color:var(--muted);padding-left:.7rem;border-left:3px solid var(--leaf)}
+.ja-nature b{color:var(--bark);font-weight:600}
+.ja-nature.ja-fauna{border-left-color:#9a6a35}
+@media(min-width:760px){.ja-wide{grid-column:span 2}}
+.ja-empty{padding:0 clamp(1rem,4vw,3rem) 2rem;color:var(--muted)}
+
+/* Hotels: forest band with a grass-blade edge */
+.ja-stays{position:relative;margin-top:2.5rem;background:var(--forest);color:#fff6e2;padding:3rem 0 1.2rem}
+.ja-stays::before{content:"";position:absolute;left:0;right:0;top:-27px;height:28px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='28' viewBox='0 0 48 28'%3E%3Cpath d='M0 28L4 9 8 28 14 3 20 28 26 12 32 28 38 7 44 28 48 28Z' fill='%231d3a29'/%3E%3C/svg%3E") repeat-x bottom/48px 28px}
+.ja-stays h2,.ja-packages h2{font-family:'Playfair Display',Georgia,serif;font-weight:600;font-size:clamp(1.9rem,5vw,2.9rem);margin:0;padding:0 clamp(1rem,4vw,3rem);line-height:1.1}
+.ja-stays .ja-lead,.ja-packages .ja-lead{padding:.6rem clamp(1rem,4vw,3rem) 0;max-width:58ch;line-height:1.55}
+.ja-stays .ja-lead{color:#d4dfc6}
+.ja-stays .ja-card h3{color:#fff6e2}
+.ja-stays .ja-card .ja-meta{color:#c5d3b6}
+
+/* Packages: dry-grass band */
+.ja-packages{background:var(--sand);padding:3rem 0 1rem}
+.ja-packages h2{color:var(--forest)}
+.ja-packages .ja-lead{color:#5b5440}
+.ja-cta{display:inline-flex;align-items:center;min-height:44px;margin-top:.8rem;padding:.6rem 1.2rem;border-radius:999px;
+  background:var(--gold);color:var(--bark);font-weight:700;text-decoration:none}
+.ja-credits{padding:1.5rem clamp(1rem,4vw,3rem);font-size:.85rem;color:#5b5440;background:var(--sand)}
+</style>
+</head>
+<body>
+<main class="ja-wrap">
+
+<section class="ja-hero">
+  <svg class="ja-horizon" viewBox="0 0 1200 190" preserveAspectRatio="xMidYMax slice" aria-hidden="true" focusable="false">
+    <path d="M0 190V128C140 100 300 138 470 118S760 92 930 116 1110 128 1200 106V190Z" fill="#1d3a29"/>
+    <path d="M0 190V158C180 138 360 164 560 150S900 132 1200 154V190Z" fill="#14291d"/>
+    <g fill="#0d1d14"><path d="M948 150l5-52 5-2-3 54z"/><path d="M953 98c-14-8-24-16-36-22l3-4c13 6 24 14 33 20zM953 100c14-9 26-17 40-22l-2-4c-15 5-28 14-40 22z"/>
+    <ellipse cx="955" cy="70" rx="72" ry="13"/><ellipse cx="910" cy="76" rx="34" ry="9"/><ellipse cx="1000" cy="75" rx="34" ry="9"/></g>
+  </svg>
+
+  <div>
+    <h1>Find your corner of Africa.</h1>
+    <p>Safaris on the plains, waterfalls, high mountains, mighty rivers, quiet lakes, deep canyons and lively cities across the continent.</p>
+  </div>
+</section>
+
+<section class="ja-filters" aria-label="Filter places">
+  <div class="ja-row" role="group" aria-label="Region">
+    <button type="button" data-filter="r" data-value="all" aria-pressed="true">All regions</button>
+    <button type="button" data-filter="r" data-value="east" aria-pressed="false">East Africa</button>
+    <button type="button" data-filter="r" data-value="west" aria-pressed="false">West Africa</button>
+    <button type="button" data-filter="r" data-value="central" aria-pressed="false">Central Africa</button>
+    <button type="button" data-filter="r" data-value="southern" aria-pressed="false">Southern Africa</button>
+  </div>
+  <div class="ja-row" role="group" aria-label="Type of place">
+    <button type="button" data-filter="c" data-value="all" aria-pressed="true">Everything</button>
+    <button type="button" data-filter="c" data-value="wildlife" aria-pressed="false">Wildlife</button>
+    <button type="button" data-filter="c" data-value="waterfall" aria-pressed="false">Waterfalls</button>
+    <button type="button" data-filter="c" data-value="mountain" aria-pressed="false">Mountains</button>
+    <button type="button" data-filter="c" data-value="lake" aria-pressed="false">Rivers and lakes</button>
+    <button type="button" data-filter="c" data-value="canyon" aria-pressed="false">Canyons and deserts</button>
+    <button type="button" data-filter="c" data-value="city" aria-pressed="false">Cities</button>
+  </div>
+</section>
+
+<section class="ja-grid" id="ja-places" aria-label="Places">
+  <!-- EAST AFRICA -->
+  <article class="ja-card ja-wide" data-region="east" data-cat="wildlife"><figure><img src="assets/images/serengeti-mara.jpg" alt="Wildebeest herds crossing open plains" loading="lazy" onerror="this.remove()"></figure><h3>Serengeti and Masai Mara</h3><p class="ja-meta">Wildlife in Tanzania and Kenya</p><p>The great wildebeest migration moves between these two reserves, with big cats following the herds.</p></article>
+  <article class="ja-card" data-region="east" data-cat="mountain"><figure><img src="assets/images/kilimanjaro.jpg" alt="Snow-capped Mount Kilimanjaro above the plains" loading="lazy" onerror="this.remove()"></figure><h3>Mount Kilimanjaro</h3><p class="ja-meta">Mountain in Tanzania</p><p>Africa's highest peak, with several trekking routes that need no climbing gear.</p></article>
+  <article class="ja-card" data-region="east" data-cat="waterfall"><figure><img src="assets/images/murchison-falls.jpg" alt="The Nile thundering through a narrow gorge" loading="lazy" onerror="this.remove()"></figure><h3>Murchison Falls</h3><p class="ja-meta">Waterfall in Uganda</p><p>The Nile squeezes through a narrow gap and plunges into a roaring gorge.</p></article>
+  <article class="ja-card" data-region="east" data-cat="city"><figure><img src="assets/images/zanzibar-stone-town.jpg" alt="Narrow lanes and carved doors in Stone Town" loading="lazy" onerror="this.remove()"></figure><h3>Stone Town, Zanzibar</h3><p class="ja-meta">City in Tanzania</p><p>A historic coastal quarter of carved doors, spice markets and narrow lanes.</p></article>
+  <article class="ja-card" data-region="east" data-cat="lake"><figure><img src="assets/images/nile-jinja.jpg" alt="The Nile flowing wide past green banks" loading="lazy" onerror="this.remove()"></figure><h3>The Nile at Jinja</h3><p class="ja-meta">River in Uganda</p><p>Where Lake Victoria feeds the Nile, with white-water rafting and calm sunset cruises.</p></article>
+  <!-- WEST AFRICA -->
+  <article class="ja-card" data-region="west" data-cat="lake"><figure><img src="assets/images/lake-retba.jpg" alt="A pink-tinted salt lake near the Atlantic coast" loading="lazy" onerror="this.remove()"></figure><h3>Lake Retba</h3><p class="ja-meta">Lake in Senegal</p><p>A shallow salt lake whose water can turn pink, with salt harvesters at work.</p></article>
+  <article class="ja-card" data-region="west" data-cat="wildlife"><figure><img src="assets/images/mole-park.jpg" alt="Elephants at a waterhole in savanna woodland" loading="lazy" onerror="this.remove()"></figure><h3>Mole National Park</h3><p class="ja-meta">Wildlife in Ghana</p><p>Walking safaris where elephants and antelope come to the waterholes.</p></article>
+  <article class="ja-card" data-region="west" data-cat="waterfall"><figure><img src="assets/images/fouta-djallon.jpg" alt="A waterfall on the green Fouta Djallon highlands" loading="lazy" onerror="this.remove()"></figure><h3>Fouta Djallon</h3><p class="ja-meta">Waterfall in Guinea</p><p>A green highland plateau with many waterfalls and village-to-village hiking trails.</p></article>
+  <article class="ja-card" data-region="west" data-cat="city"><figure><img src="assets/images/dakar.jpg" alt="Dakar's coastline and city streets" loading="lazy" onerror="this.remove()"></figure><h3>Dakar</h3><p class="ja-meta">City in Senegal</p><p>A lively Atlantic capital known for its music, markets and street art.</p></article>
+  <article class="ja-card" data-region="west" data-cat="lake"><figure><img src="assets/images/niger-river.jpg" alt="A long wooden boat on the Niger River" loading="lazy" onerror="this.remove()"></figure><h3>The Niger River</h3><p class="ja-meta">River in Mali</p><p>Boat trips past fishing villages and riverside markets on one of West Africa's great rivers.</p></article>
+  <!-- CENTRAL AFRICA -->
+  <article class="ja-card" data-region="central" data-cat="wildlife"><figure><img src="assets/images/volcanoes-park.jpg" alt="Misty volcanic forest where mountain gorillas live" loading="lazy" onerror="this.remove()"></figure><h3>Volcanoes National Park</h3><p class="ja-meta">Wildlife in Rwanda</p><p>Trek through misty volcanic forest to spend time with mountain gorillas.</p></article>
+  <article class="ja-card" data-region="central" data-cat="lake"><figure><img src="assets/images/lake-kivu.jpg" alt="Calm Lake Kivu with green hills around it" loading="lazy" onerror="this.remove()"></figure><h3>Lake Kivu</h3><p class="ja-meta">Lake in Rwanda and DR Congo</p><p>Quiet beaches and rolling hills on one of Africa's Great Lakes.</p></article>
+  <article class="ja-card" data-region="central" data-cat="wildlife"><figure><img src="assets/images/loango.jpg" alt="A forest elephant walking along an empty beach" loading="lazy" onerror="this.remove()"></figure><h3>Loango National Park</h3><p class="ja-meta">Wildlife in Gabon</p><p>Forest, lagoon and beach in one park, with elephants sometimes seen near the shore.</p></article>
+  <article class="ja-card" data-region="central" data-cat="lake"><figure><img src="assets/images/congo-river.jpg" alt="A broad river bending through dense rainforest" loading="lazy" onerror="this.remove()"></figure><h3>The Congo River</h3><p class="ja-meta">River in DR Congo and Republic of the Congo</p><p>The continent's deepest river, winding through rainforest and between the capitals Kinshasa and Brazzaville.</p></article>
+  <!-- SOUTHERN AFRICA -->
+  <article class="ja-card ja-wide" data-region="southern" data-cat="waterfall"><figure><img src="assets/images/victoria-falls.jpg" alt="Victoria Falls with spray rising above the gorge" loading="lazy" onerror="this.remove()"></figure><h3>Victoria Falls</h3><p class="ja-meta">Waterfall in Zambia and Zimbabwe</p><p>One of the world's largest waterfalls, which you can view from both sides of the border.</p></article>
+  <article class="ja-card ja-wide" data-region="southern" data-cat="mountain"><figure><img src="assets/images/table-mountain.jpg" alt="Flat-topped Table Mountain above Cape Town" loading="lazy" onerror="this.remove()"></figure><h3>Table Mountain</h3><p class="ja-meta">Mountain in South Africa</p><p>A flat-topped mountain above the city, reached by hiking trail or cable car.</p></article>
+  <article class="ja-card" data-region="southern" data-cat="city"><figure><img src="assets/images/cape-town.jpg" alt="Cape Town skyline between the mountain and the sea" loading="lazy" onerror="this.remove()"></figure><h3>Cape Town</h3><p class="ja-meta">City in South Africa</p><p>Beaches, vineyards and mountain trails all within a short drive.</p></article>
+  <article class="ja-card" data-region="southern" data-cat="canyon"><figure><img src="assets/images/fish-river-canyon.jpg" alt="A vast canyon in the Namibian desert" loading="lazy" onerror="this.remove()"></figure><h3>Fish River Canyon</h3><p class="ja-meta">Canyon in Namibia</p><p>One of the largest canyons on Earth, with a multi-day hiking trail along its floor.</p></article>
+  <article class="ja-card ja-wide" data-region="southern" data-cat="wildlife"><figure><img src="assets/images/okavango.jpg" alt="Dugout canoe gliding through reed channels" loading="lazy" onerror="this.remove()"></figure><h3>Okavango Delta</h3><p class="ja-meta">Wildlife in Botswana</p><p>A vast inland delta of channels and islands, explored by boat, traditional canoe or on foot.</p><p class="ja-nature ja-fauna"><b>Fauna:</b> elephants, lions, hippos, African wild dogs, red lechwe and more than 400 bird species.</p><p class="ja-nature ja-flora"><b>Flora:</b> papyrus, water lilies and palm-fringed islands.</p></article>
+  <article class="ja-card" data-region="southern" data-cat="wildlife"><figure><img src="assets/images/chobe.jpg" alt="Elephants drinking along the Chobe River" loading="lazy" onerror="this.remove()"></figure><h3>Chobe National Park</h3><p class="ja-meta">Wildlife in Botswana</p><p>Famous for river safaris, where large herds come down to the water in the dry season.</p><p class="ja-nature ja-fauna"><b>Fauna:</b> one of Africa's largest elephant populations, plus buffalo, lions, hippos and giraffe.</p><p class="ja-nature ja-flora"><b>Flora:</b> floodplain grasses with mopane and Kalahari teak woodland.</p></article>
+  <article class="ja-card" data-region="southern" data-cat="wildlife"><figure><img src="assets/images/makgadikgadi.jpg" alt="Ancient baobab trees on a pale salt pan" loading="lazy" onerror="this.remove()"></figure><h3>Makgadikgadi Pans</h3><p class="ja-meta">Wildlife in Botswana</p><p>Huge salt pans with a wide open sky, best for quiet, remote stays.</p><p class="ja-nature ja-fauna"><b>Fauna:</b> zebra migration in the wet season, flamingos on the pans and habituated meerkats.</p><p class="ja-nature ja-flora"><b>Flora:</b> ancient baobabs, palm islands and open grass plains.</p></article>
+  <article class="ja-card" data-region="southern" data-cat="canyon"><figure><img src="assets/images/sossusvlei.jpg" alt="Red sand dunes at sunrise" loading="lazy" onerror="this.remove()"></figure><h3>Sossusvlei</h3><p class="ja-meta">Desert in Namibia</p><p>Towering red dunes that glow at sunrise, best climbed early before the heat.</p></article>
+  <article class="ja-card" data-region="southern" data-cat="lake"><figure><img src="assets/images/zambezi.jpg" alt="A calm stretch of the Zambezi at sunset" loading="lazy" onerror="this.remove()"></figure><h3>The Zambezi</h3><p class="ja-meta">River in Zambia and Zimbabwe</p><p>White-water rafting below Victoria Falls, sunset cruises and canoe safaris on the Lower Zambezi.</p></article>
+</section>
+<p class="ja-empty" id="ja-empty" hidden>No places match those filters yet. Try a different region or type.</p>
+
+<section class="ja-stays" aria-labelledby="stays-h">
+  <h2 id="stays-h">Hotels and lodges</h2>
+  <p class="ja-lead">Mid-range and high-end places to stay. Named hotels with verified details will appear here as partners join.</p>
+  <div class="ja-grid">
+    <article class="ja-card" data-region="east"><figure><img src="assets/images/hotel-tented-camp.jpg" alt="A canvas safari tent with a veranda at dusk" loading="lazy" onerror="this.remove()"></figure><h3>Tented safari camp</h3><p class="ja-meta">Mid-range in East Africa</p><p>En-suite tents beside the park, with meals and shared game drives usually included.</p></article>
+    <article class="ja-card" data-region="southern"><figure><img src="assets/images/hotel-boutique-city.jpg" alt="A small hotel courtyard with a pool" loading="lazy" onerror="this.remove()"></figure><h3>Boutique city hotel</h3><p class="ja-meta">Mid-range in Southern Africa</p><p>Design-led rooms, a pool and a local restaurant, in a walkable neighbourhood.</p></article>
+    <article class="ja-card" data-region="central"><figure><img src="assets/images/hotel-lakeside-lodge.jpg" alt="A lodge terrace above a calm lake" loading="lazy" onerror="this.remove()"></figure><h3>Lakeside lodge</h3><p class="ja-meta">Mid-range in Central Africa</p><p>Quiet rooms with lake views, boat trips and forest walks on your doorstep.</p></article>
+    <article class="ja-card" data-region="east"><figure><img src="assets/images/hotel-beach.jpg" alt="A palm-lined beach hotel at sunset" loading="lazy" onerror="this.remove()"></figure><h3>Beach hotel</h3><p class="ja-meta">Mid-range on the East African coast</p><p>Rooms steps from the sand, with snorkelling and sunset dhow trips nearby.</p></article>
+    <article class="ja-card" data-region="east"><figure><img src="assets/images/hotel-luxury-lodge.jpg" alt="A luxury lodge with a plunge pool over the plains" loading="lazy" onerror="this.remove()"></figure><h3>Luxury safari lodge</h3><p class="ja-meta">High-end in East Africa</p><p>Few guests, private guides and all-inclusive stays on a wildlife reserve or conservancy.</p></article>
+    <article class="ja-card" data-region="southern"><figure><img src="assets/images/hotel-winelands.jpg" alt="A grand estate hotel among vineyards" loading="lazy" onerror="this.remove()"></figure><h3>Winelands estate hotel</h3><p class="ja-meta">High-end in South Africa</p><p>Historic estate rooms among vineyards, with tastings and fine dining on site.</p></article>
+    <article class="ja-card" data-region="southern"><figure><img src="assets/images/hotel-falls-view.jpg" alt="A heritage hotel veranda near a misty gorge" loading="lazy" onerror="this.remove()"></figure><h3>Heritage hotel by the falls</h3><p class="ja-meta">High-end near Victoria Falls</p><p>Classic colonial-era style, spray-misted gardens and guided tours of the gorge.</p></article>
+    <article class="ja-card" data-region="east"><figure><img src="assets/images/hotel-island.jpg" alt="A beachfront villa on a quiet island" loading="lazy" onerror="this.remove()"></figure><h3>Private island resort</h3><p class="ja-meta">High-end on the islands</p><p>Villas with their own pool, a private beach and a spa, for rest after a safari.</p></article>
+  </div>
+</section>
+
+<section class="ja-packages" aria-labelledby="pkg-h">
+  <h2 id="pkg-h">Travel packages</h2>
+  <p class="ja-lead">Sample itineraries at mid-range and high-end comfort. Operators confirm the exact route, dates and price when you ask.</p>
+  <div class="ja-grid">
+    <article class="ja-card" data-region="east"><figure><img src="assets/images/pkg-migration.jpg" alt="Wildebeest herds at a river crossing" loading="lazy" onerror="this.remove()"></figure><h3>Great Migration safari</h3><p class="ja-meta">High-end, 8 days, Tanzania and Kenya</p><p>Private guide, luxury lodges in the Serengeti and Masai Mara, and flights between parks.</p><a class="ja-cta" href="listings.html">Ask about this package</a></article>
+    <article class="ja-card" data-region="central"><figure><img src="assets/images/pkg-gorillas.jpg" alt="Hikers in misty volcanic forest" loading="lazy" onerror="this.remove()"></figure><h3>Gorillas and Lake Kivu</h3><p class="ja-meta">High-end, 6 days, Rwanda</p><p>Gorilla trekking permits, a comfortable forest lodge and two relaxed days by the lake.</p><a class="ja-cta" href="listings.html">Ask about this package</a></article>
+    <article class="ja-card" data-region="southern"><figure><img src="assets/images/pkg-cape.jpg" alt="Cape Town with the mountain behind it" loading="lazy" onerror="this.remove()"></figure><h3>Cape Town and the Winelands</h3><p class="ja-meta">Mid-range, 7 days, South Africa</p><p>Table Mountain, the Cape Peninsula, wine tastings and boutique hotels.</p><a class="ja-cta" href="listings.html">Ask about this package</a></article>
+    <article class="ja-card" data-region="southern"><figure><img src="assets/images/pkg-falls-chobe.jpg" alt="Elephants drinking at a river at sunset" loading="lazy" onerror="this.remove()"></figure><h3>Victoria Falls and Chobe</h3><p class="ja-meta">Mid-range, 5 days, Zambia, Zimbabwe and Botswana</p><p>Both sides of the falls, a river safari on the Chobe and comfortable lodges.</p><a class="ja-cta" href="listings.html">Ask about this package</a></article>
+    <article class="ja-card" data-region="southern"><figure><img src="assets/images/pkg-namibia.jpg" alt="Red dunes under a clear sky" loading="lazy" onerror="this.remove()"></figure><h3>Dunes and canyons</h3><p class="ja-meta">Mid-range, 9 days, Namibia</p><p>Sossusvlei at sunrise, Fish River Canyon and guided desert days between lodges.</p><a class="ja-cta" href="listings.html">Ask about this package</a></article>
+    <article class="ja-card" data-region="east"><figure><img src="assets/images/pkg-zanzibar.jpg" alt="A white-sand beach with turquoise water" loading="lazy" onerror="this.remove()"></figure><h3>Beach rest after safari</h3><p class="ja-meta">High-end, 5 days, Zanzibar</p><p>A private villa, spa days and an optional spice and Stone Town tour.</p><a class="ja-cta" href="listings.html">Ask about this package</a></article>
+    <article class="ja-card" data-region="west"><figure><img src="assets/images/pkg-ghana.jpg" alt="A coastal fort above the sea" loading="lazy" onerror="this.remove()"></figure><h3>Heritage and wildlife</h3><p class="ja-meta">Mid-range, 8 days, Ghana</p><p>Accra, the historic coast forts and a walking safari at Mole National Park.</p><a class="ja-cta" href="listings.html">Ask about this package</a></article>
+    <article class="ja-card" data-region="west"><figure><img src="assets/images/pkg-senegal.jpg" alt="Colourful fishing boats on a beach" loading="lazy" onerror="this.remove()"></figure><h3>Coast and culture</h3><p class="ja-meta">Mid-range, 7 days, Senegal</p><p>Dakar, Gorée Island, Lake Retba and a night in the Saloum Delta.</p><a class="ja-cta" href="listings.html">Ask about this package</a></article>
+  </div>
+</section>
+
+<p class="ja-credits">Photo credits: add each photographer's name and source here, as your image licences require.</p>
+
+</main>
+<script>
+(function(){
+  var s={r:'all',c:'all'},
+      cards=[].slice.call(document.querySelectorAll('#ja-places .ja-card')),
+      empty=document.getElementById('ja-empty');
+  function apply(){
+    var shown=0;
+    cards.forEach(function(el){
+      var ok=(s.r==='all'||el.dataset.region===s.r)&&(s.c==='all'||el.dataset.cat===s.c);
+      el.hidden=!ok; if(ok) shown++;
+    });
+    empty.hidden=shown>0;
+  }
+  [].forEach.call(document.querySelectorAll('[data-filter]'),function(b){
+    b.addEventListener('click',function(){
+      var k=b.dataset.filter; s[k]=b.dataset.value;
+      [].forEach.call(document.querySelectorAll('[data-filter="'+k+'"]'),function(x){
+        x.setAttribute('aria-pressed',String(x===b));
+      });
+      apply();
+    });
+  });
+})();
+</script>
+</body>
+</html>
