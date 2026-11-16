@@ -3,7 +3,7 @@
 -- Failure to enqueue never blocks or fails the visitor's submission. The function URL below is specific
 -- to the Just-Africa Supabase project; change it if the project changes.
 
-create extension if not exists pg_net;
+create extension if not exists pg_net with schema extensions;
 
 alter table public.contact_messages add column notified_at timestamptz;
 grant select, update on public.contact_messages to service_role;
