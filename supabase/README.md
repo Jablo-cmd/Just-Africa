@@ -5,7 +5,7 @@ The site currently ships as static HTML. This folder establishes the database fo
 ## Provisioning
 
 1. Create a dedicated Supabase project for Just Africa. Do not reuse a production project from another product.
-2. Open the SQL Editor and apply `migrations/202610160001_just_africa_core.sql`, then `migrations/202611010001_hardening_patch.sql` (verification-field privacy, listing/business guards) `migrations/202611160001_hardening.sql` (least-privilege grants, column-level insert allowlists, length limits, server-recorded verifier, function EXECUTE revokes) and `migrations/202611160002_contact_messages.sql` (private contact-form inbox, admin-only reads) and `migrations/202611160003_contact_notifications.sql` (email trigger), to that new project, or adopt it into a local Supabase CLI workflow before deploying.
+2. Open the SQL Editor and apply `migrations/202610160001_just_africa_core.sql`, then `migrations/202611010001_hardening_patch.sql` (verification-field privacy, listing/business guards) `migrations/202611160001_hardening.sql` (least-privilege grants, column-level insert allowlists, length limits, server-recorded verifier, function EXECUTE revokes) and `migrations/202611160002_contact_messages.sql` (private contact-form inbox, admin-only reads) and `migrations/202611160003_contact_notifications.sql` (email trigger) and `migrations/202611160004_bookings.sql` (room types, booking requests, availability), to that new project, or adopt it into a local Supabase CLI workflow before deploying.
 3. Review the SQL and run Supabase Database Linter/advisors before accepting real users.
 4. Configure Auth providers, email verification, redirect URLs, SMTP, abuse protection and password policies in the dashboard.
 5. Create a private Storage bucket for business/listing uploads and add narrowly scoped policies. Do not make uploads public by default.
@@ -54,3 +54,11 @@ Email delivery/notification, private signed image uploads, billing, affiliate pa
 | `SMTP_HOST` / `SMTP_PORT` | Optional; default `smtp.zoho.com` / `465` |
 
 Messages are always stored and visible in the admin dashboard even if email is unconfigured or fails; a failed send releases the claim (`notified_at` back to null) so it can be retried.
+
+## Areas, rooms and booking requests
+
+- **Areas** are `destinations` rows of type `area`, `city`, `park` or `island` (seeded in `seed.sql`). Hotels pick one when they create a listing.
+- **Rooms:** hotel owners add `room_types` (price per night, number of rooms, max guests) to their accommodation listings from the dashboard.
+- **Booking flow (stage 1, no payments):** a signed-in guest calls `request_booking()`; the server validates the dates and capacity, computes the total from the room rate (never from the client) and stores a `requested` booking. The hotel calls `respond_to_booking()` to confirm or decline. Only **confirmed** bookings hold inventory, and confirmation re-checks availability under a lock on the room type, so rooms cannot be double-booked. Guests and hotels can `cancel_booking()`.
+- Clients cannot insert or update `bookings` directly; all writes go through those functions. `room_free_units()` is public and returns only a number.
+- Payments (stage 2) are not implemented: no money is collected on the site.
