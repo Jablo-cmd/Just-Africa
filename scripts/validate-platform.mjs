@@ -20,16 +20,20 @@ assert.match(config, /url:\s*"(?:|https:\/\/[a-z0-9]+\.supabase\.co)"/, "Supabas
 assert.match(config, /publishableKey:\s*"(?:|sb_publishable_[A-Za-z0-9_-]+)"/, "Supabase key must be empty or a sb_publishable_ key");
 assert.doesNotMatch(config, /service_role|sb_secret_|eyJ[A-Za-z0-9_-]{10,}/, "Secret/service-role keys must never be committed");
 
+const patch = read("supabase/migrations/202611010001_hardening_patch.sql");
+assert.match(patch, /guard_listing_publication/, "Published listing edits must return to review");
+assert.match(patch, /guard_business_changes/, "Business ownership/verification fields must be guarded");
 const hardening = read("supabase/migrations/202611160001_hardening.sql");
-assert.match(hardening, /guard_published_listing_edits/, "Published listing edits must return to review");
-assert.match(hardening, /guard_business_verification/, "Business verification must be recorded server-side");
+assert.match(hardening, /record_business_verification/, "Business verification actor must be recorded server-side");
 assert.match(hardening, /grant insert \(listing_id, business_id, traveller_id/, "Public enquiry inserts must use a column allowlist");
+assert.match(hardening, /revoke all on public\.profiles/, "API roles must start from least-privilege table grants");
 
 const required = [
   "index.html", "destinations.html", "guides.html", "partners.html", "listings.html",
   "account.html", "dashboard.html", "assets/js/main.js", "assets/js/portal.js",
   "assets/js/listings.js", "supabase/seed.sql", "docs/SECURITY_MODEL.md",
   "privacy.html", "terms.html", "404.html", "robots.txt", "sitemap.xml",
+  "supabase/migrations/202611010001_hardening_patch.sql",
   "supabase/migrations/202611160001_hardening.sql"
 ];
 for (const file of required) assert.ok(fs.existsSync(path.join(root, file)), `Missing required platform file: ${file}`);

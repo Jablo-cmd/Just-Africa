@@ -5,7 +5,7 @@ The site currently ships as static HTML. This folder establishes the database fo
 ## Provisioning
 
 1. Create a dedicated Supabase project for Just Africa. Do not reuse a production project from another product.
-2. Open the SQL Editor and apply `migrations/202610160001_just_africa_core.sql`, then `migrations/202611160001_hardening.sql` (column-level insert grants, length limits, re-review of edited published listings, server-recorded verification), to that new project, or adopt it into a local Supabase CLI workflow before deploying.
+2. Open the SQL Editor and apply `migrations/202610160001_just_africa_core.sql`, then `migrations/202611010001_hardening_patch.sql` (verification-field privacy, listing/business guards) and `migrations/202611160001_hardening.sql` (least-privilege grants, column-level insert allowlists, length limits, server-recorded verifier, function EXECUTE revokes), to that new project, or adopt it into a local Supabase CLI workflow before deploying.
 3. Review the SQL and run Supabase Database Linter/advisors before accepting real users.
 4. Configure Auth providers, email verification, redirect URLs, SMTP, abuse protection and password policies in the dashboard.
 5. Create a private Storage bucket for business/listing uploads and add narrowly scoped policies. Do not make uploads public by default.
