@@ -193,8 +193,12 @@
     if (role !== "admin") {
       businesses.innerHTML = '<p class="account-muted">Editor accounts can manage editorial content; business approvals require an admin account.</p>';
       listings.innerHTML = "";
+      document.querySelector("#admin-message-list").innerHTML = '<p class="account-muted">Contact messages are visible to admin accounts only.</p>';
       return;
     }
+    const messageResult = await client.from("contact_messages").select("id,name,email,topic,message,status").in("status", ["new", "read"]).order("created_at", { ascending: false }).limit(100);
+    document.querySelector("#admin-message-list").innerHTML = messageResult.error ? '<p class="account-muted">Contact messages unavailable.</p>' :
+      messageResult.data.length ? messageResult.data.map((m) => card(m.name + " · " + m.topic, m.status, m.email + " — " + m.message, (m.status === "new" ? actionButton("read-message", m.id, "Mark read") : "") + actionButton("close-message", m.id, "Close"))).join("") : '<p class="account-muted">No open messages.</p>';
     const [businessResult, listingResult] = await Promise.all([
       client.from("businesses").select("id,name,status,country_code,city,business_type").eq("status", "pending_review").order("created_at", { ascending: true }).limit(100),
       client.from("listings").select("id,title,status,listing_type,summary,businesses(name,status)").eq("status", "pending_review").order("created_at", { ascending: true }).limit(100)
@@ -269,6 +273,8 @@
       else if (action === "reject-business") result = await client.from("businesses").update({status:"rejected"}).eq("id",id);
       else if (action === "publish-listing") result = await client.from("listings").update({status:"published",published_at:new Date().toISOString()}).eq("id",id);
       else if (action === "reject-listing") result = await client.from("listings").update({status:"rejected"}).eq("id",id);
+      else if (action === "read-message") result = await client.from("contact_messages").update({status:"read"}).eq("id",id);
+      else if (action === "close-message") result = await client.from("contact_messages").update({status:"closed"}).eq("id",id);
       else if (action === "close-inquiry") result = await client.from("inquiries").update({status:"closed"}).eq("id",id);
       if (result?.error) throw result.error;
       message("dashboard-message", "Update saved.", "success");
