@@ -23,6 +23,10 @@ assert.doesNotMatch(config, /service_role|sb_secret_|eyJ[A-Za-z0-9_-]{10,}/, "Se
 const patch = read("supabase/migrations/202611010001_hardening_patch.sql");
 assert.match(patch, /guard_listing_publication/, "Published listing edits must return to review");
 assert.match(patch, /guard_business_changes/, "Business ownership/verification fields must be guarded");
+const contactMigration = read("supabase/migrations/202611160002_contact_messages.sql");
+assert.match(contactMigration, /alter table public\.contact_messages enable row level security/, "contact_messages must enable RLS");
+assert.match(contactMigration, /grant insert \(name, email, topic, message, user_id\)/, "Public contact inserts must use a column allowlist");
+assert.doesNotMatch(contactMigration, /grant select[^;]*to[^;]*anon/i, "Anonymous users must never read contact messages");
 const hardening = read("supabase/migrations/202611160001_hardening.sql");
 assert.match(hardening, /record_business_verification/, "Business verification actor must be recorded server-side");
 assert.match(hardening, /grant insert \(listing_id, business_id, traveller_id/, "Public enquiry inserts must use a column allowlist");
@@ -34,7 +38,9 @@ const required = [
   "assets/js/listings.js", "supabase/seed.sql", "docs/SECURITY_MODEL.md",
   "privacy.html", "terms.html", "404.html", "robots.txt", "sitemap.xml",
   "supabase/migrations/202611010001_hardening_patch.sql",
-  "supabase/migrations/202611160001_hardening.sql"
+  "supabase/migrations/202611160001_hardening.sql",
+  "supabase/migrations/202611160002_contact_messages.sql",
+  "contact.html", "assets/js/contact.js"
 ];
 for (const file of required) assert.ok(fs.existsSync(path.join(root, file)), `Missing required platform file: ${file}`);
 
@@ -54,7 +60,7 @@ assert.deepEqual(missingLinks, [], "Found missing local assets or links");
 
 // Page-level SEO/privacy hygiene.
 const baseUrl = "https://jablo-cmd.github.io/Just-Africa/";
-const publicPages = ["index.html", "destinations.html", "guides.html", "listings.html", "partners.html", "privacy.html", "terms.html"];
+const publicPages = ["index.html", "destinations.html", "guides.html", "listings.html", "partners.html", "privacy.html", "terms.html", "contact.html"];
 const privatePages = ["account.html", "dashboard.html", "404.html"];
 const pageProblems = [];
 for (const file of htmlFiles) {
@@ -64,9 +70,18 @@ for (const file of htmlFiles) {
   if (publicPages.includes(file) && !/<link rel="canonical"/.test(html)) pageProblems.push(`${file}: missing canonical link`);
   if (privatePages.includes(file) && !/<meta name="robots" content="noindex/.test(html)) pageProblems.push(`${file}: should be noindex`);
   if (publicPages.includes(file) && /noindex/.test(html)) pageProblems.push(`${file}: public page must not be noindex`);
-  if (!["privacy.html", "terms.html", "404.html"].includes(file) && !/href="privacy\.html"/.test(html)) pageProblems.push(`${file}: missing privacy link`);
+  if (!["privacy.html", "terms.html", "404.html", "contact.html"].includes(file) && !/href="privacy\.html"/.test(html)) pageProblems.push(`${file}: missing privacy link`);
 }
 assert.deepEqual(pageProblems, [], "Page hygiene problems");
+// Contact details must never be published in page markup; visitors use the contact form.
+const emailPattern = /[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}/g;
+const exposed = [];
+for (const file of htmlFiles) {
+  for (const found of read(file).match(emailPattern) || []) {
+    if (!/@example\.com$/i.test(found)) exposed.push(`${file}: ${found}`);
+  }
+}
+assert.deepEqual(exposed, [], "Real email addresses must not appear in site pages (use the contact form)");
 const sitemap = read("sitemap.xml");
 for (const file of publicPages) assert.ok(sitemap.includes(baseUrl + (file === "index.html" ? "" : file) + "</loc>"), `sitemap.xml missing ${file}`);
 assert.match(read("robots.txt"), /Sitemap: /, "robots.txt must reference the sitemap");
