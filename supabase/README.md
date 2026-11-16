@@ -5,7 +5,7 @@ The site currently ships as static HTML. This folder establishes the database fo
 ## Provisioning
 
 1. Create a dedicated Supabase project for Just Africa. Do not reuse a production project from another product.
-2. Open the SQL Editor and apply `migrations/202610160001_just_africa_core.sql`, then `migrations/202611010001_hardening_patch.sql` (verification-field privacy, listing/business guards) `migrations/202611160001_hardening.sql` (least-privilege grants, column-level insert allowlists, length limits, server-recorded verifier, function EXECUTE revokes) and `migrations/202611160002_contact_messages.sql` (private contact-form inbox, admin-only reads), to that new project, or adopt it into a local Supabase CLI workflow before deploying.
+2. Open the SQL Editor and apply `migrations/202610160001_just_africa_core.sql`, then `migrations/202611010001_hardening_patch.sql` (verification-field privacy, listing/business guards) `migrations/202611160001_hardening.sql` (least-privilege grants, column-level insert allowlists, length limits, server-recorded verifier, function EXECUTE revokes) and `migrations/202611160002_contact_messages.sql` (private contact-form inbox, admin-only reads) and `migrations/202611160003_contact_notifications.sql` (email trigger), to that new project, or adopt it into a local Supabase CLI workflow before deploying.
 3. Review the SQL and run Supabase Database Linter/advisors before accepting real users.
 4. Configure Auth providers, email verification, redirect URLs, SMTP, abuse protection and password policies in the dashboard.
 5. Create a private Storage bucket for business/listing uploads and add narrowly scoped policies. Do not make uploads public by default.
@@ -41,3 +41,16 @@ Email delivery/notification, private signed image uploads, billing, affiliate pa
 - User-supplied profile metadata is not used for authorization.
 - Do not store card details. Use a compliant payment provider and server-side webhook verification if/when billing is added.
 - Add retention and deletion policies for personal enquiry data before launch.
+
+## Contact-form email notifications
+
+`functions/notify-contact` emails the team when a contact message is stored. Deploy it with `verify_jwt` off (it is protected by design: it only accepts a message id, re-reads the row, and emails each message once), then set these secrets in **Edge Functions → Secrets** (never commit them):
+
+| Secret | Value |
+|---|---|
+| `SMTP_USER` | Mailbox that sends the notification (e.g. a Zoho mailbox) |
+| `SMTP_PASSWORD` | An app-specific password for that mailbox (not the login password) |
+| `NOTIFY_TO` | Inbox that receives the notification |
+| `SMTP_HOST` / `SMTP_PORT` | Optional; default `smtp.zoho.com` / `465` |
+
+Messages are always stored and visible in the admin dashboard even if email is unconfigured or fails; a failed send releases the claim (`notified_at` back to null) so it can be retried.

@@ -27,6 +27,12 @@ const contactMigration = read("supabase/migrations/202611160002_contact_messages
 assert.match(contactMigration, /alter table public\.contact_messages enable row level security/, "contact_messages must enable RLS");
 assert.match(contactMigration, /grant insert \(name, email, topic, message, user_id\)/, "Public contact inserts must use a column allowlist");
 assert.doesNotMatch(contactMigration, /grant select[^;]*to[^;]*anon/i, "Anonymous users must never read contact messages");
+const notifyMigration = read("supabase/migrations/202611160003_contact_notifications.sql");
+assert.match(notifyMigration, /revoke all on function public\.notify_contact_message\(\) from public, anon, authenticated/, "Notification trigger function must not be callable by API roles");
+assert.match(notifyMigration, /exception when others then/, "Notification enqueue failures must never block a contact submission");
+const notifyFunction = read("supabase/functions/notify-contact/index.ts");
+assert.match(notifyFunction, /Deno\.env\.get\("NOTIFY_TO"\)/, "Notification recipient must come from a secret, not source code");
+assert.match(notifyFunction, /\.is\("notified_at", null\)/, "Function must claim a message once before sending (no duplicate emails)");
 const hardening = read("supabase/migrations/202611160001_hardening.sql");
 assert.match(hardening, /record_business_verification/, "Business verification actor must be recorded server-side");
 assert.match(hardening, /grant insert \(listing_id, business_id, traveller_id/, "Public enquiry inserts must use a column allowlist");
@@ -40,7 +46,9 @@ const required = [
   "supabase/migrations/202611010001_hardening_patch.sql",
   "supabase/migrations/202611160001_hardening.sql",
   "supabase/migrations/202611160002_contact_messages.sql",
-  "contact.html", "assets/js/contact.js"
+  "contact.html", "assets/js/contact.js",
+  "supabase/migrations/202611160003_contact_notifications.sql",
+  "supabase/functions/notify-contact/index.ts"
 ];
 for (const file of required) assert.ok(fs.existsSync(path.join(root, file)), `Missing required platform file: ${file}`);
 
@@ -76,7 +84,7 @@ assert.deepEqual(pageProblems, [], "Page hygiene problems");
 // Contact details must never be published in page markup; visitors use the contact form.
 const emailPattern = /[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}/g;
 const exposed = [];
-for (const file of htmlFiles) {
+for (const file of [...htmlFiles, "assets/js/contact.js", "assets/js/portal.js", "assets/js/listings.js", "assets/js/main.js", "supabase/functions/notify-contact/index.ts"]) {
   for (const found of read(file).match(emailPattern) || []) {
     if (!/@example\.com$/i.test(found)) exposed.push(`${file}: ${found}`);
   }
