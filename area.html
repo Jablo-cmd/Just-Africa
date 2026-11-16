@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#10251f">
+  <meta name="description" content="Verified hotels in this area.">
+  <title>Hotels by area — Just Africa</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="icon" href="assets/images/favicon.svg" type="image/svg+xml">
+  <meta name="robots" content="noindex">
+</head>
+<body>
+  <div class="announcement"><span class="announcement-dot"></span> A continent of wonder. One place to begin.</div>
+  <header class="site-header"><a class="brand" href="index.html" aria-label="Just Africa home"><span class="brand-mark">J<span>A</span></span><span class="brand-name">just<span>africa</span></span></a><button class="menu-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Open navigation"><span></span><span></span></button><nav class="primary-nav" id="primary-nav" aria-label="Main navigation"><a href="index.html">Discover</a><a href="destinations.html">Destinations</a><a href="areas.html">Hotels by area</a><a href="listings.html">Stays & experiences</a><a href="guides.html">Travel guides</a><a href="account.html">Your account</a><a class="nav-partner" href="partners.html">Partner with us <span>↗</span></a></nav></header>
+  <main>
+    <section class="page-hero"><p class="eyebrow"><span class="eyebrow-line"></span> <a href="areas.html">All areas</a></p><h1 id="area-title">Places to stay</h1><p id="area-intro"></p></section>
+    <section class="section">
+      <p id="area-status" class="portal-message" role="status" aria-live="polite">Loading hotels…</p>
+      <div id="hotel-grid" class="public-listing-grid"></div>
+      <p id="hotel-empty" class="empty-state" hidden>No verified hotels have joined this area yet. Check back soon, or <a href="areas.html">browse other areas</a>. Own a hotel here? <a href="partners.html">Partner with us</a>.</p>
+    </section>
+  </main>
+  <footer class="site-footer"><div class="footer-bottom footer-legal"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="contact.html">Contact</a><span>© <span data-year></span> Just Africa.</span><span>Travel thoughtfully. Leave a lighter footprint.</span></div></footer>
+  <script src="assets/js/supabase-config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8"></script><script src="assets/js/ja-common.js"></script><script src="assets/js/main.js" defer></script><script src="assets/js/area.js" defer></script>
+</body></html>

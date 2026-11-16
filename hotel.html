@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#10251f">
+  <meta name="description" content="Hotel details and booking request.">
+  <title>Hotel — Just Africa</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="icon" href="assets/images/favicon.svg" type="image/svg+xml">
+  <meta name="robots" content="noindex">
+</head>
+<body>
+  <div class="announcement"><span class="announcement-dot"></span> A continent of wonder. One place to begin.</div>
+  <header class="site-header"><a class="brand" href="index.html" aria-label="Just Africa home"><span class="brand-mark">J<span>A</span></span><span class="brand-name">just<span>africa</span></span></a><button class="menu-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Open navigation"><span></span><span></span></button><nav class="primary-nav" id="primary-nav" aria-label="Main navigation"><a href="index.html">Discover</a><a href="destinations.html">Destinations</a><a href="areas.html">Hotels by area</a><a href="listings.html">Stays & experiences</a><a href="guides.html">Travel guides</a><a href="account.html">Your account</a><a class="nav-partner" href="partners.html">Partner with us <span>↗</span></a></nav></header>
+  <main>
+    <section class="section hotel-page">
+      <p id="hotel-status" class="portal-message" role="status" aria-live="polite">Loading hotel…</p>
+      <div id="hotel-detail" class="hotel-detail"></div>
+      <section id="booking-panel" class="enquiry-panel" hidden>
+        <div class="section-heading"><div><p class="eyebrow"><span class="eyebrow-line"></span> Request a stay</p><h2>Book your <em>room.</em></h2></div></div>
+        <p class="account-muted">You are sending a booking request. The property confirms or declines it, and <strong>no payment is taken on Just Africa</strong>. Rooms are only held once the property confirms.</p>
+        <form id="booking-form" class="portal-form portal-form-grid" novalidate>
+          <label class="form-span">Room<select name="room_type_id" required></select></label>
+          <label>Check-in<input name="check_in" type="date" required></label>
+          <label>Check-out<input name="check_out" type="date" required></label>
+          <label>Guests<input name="guests" type="number" min="1" max="200" value="2" required></label>
+          <label>Rooms<input name="rooms" type="number" min="1" max="10" value="1" required></label>
+          <label>Your name<input name="guest_name" required maxlength="120" autocomplete="name"></label>
+          <label>Email address<input name="guest_email" type="email" required maxlength="254" autocomplete="email"></label>
+          <label class="form-span">Notes for the property (optional)<textarea name="notes" rows="3" maxlength="1000" placeholder="Arrival time, dietary needs, accessibility…"></textarea></label>
+          <p id="availability" class="form-span account-muted" aria-live="polite">Choose your dates to see availability.</p>
+          <div class="form-span"><button class="button button-dark" type="submit" id="booking-submit">Request booking <span>→</span></button></div>
+        </form>
+        <p id="signin-note" class="account-muted" hidden>You need an account to request a booking. <a id="signin-link" href="account.html">Sign in or create one</a>.</p>
+        <p id="booking-result" class="portal-message" role="status" aria-live="polite"></p>
+        <p class="portal-legal">Do not include payment details. By requesting you agree to our <a href="terms.html">Terms</a> and <a href="privacy.html">Privacy Policy</a>; your details are shared with the property.</p>
+      </section>
+    </section>
+  </main>
+  <footer class="site-footer"><div class="footer-bottom footer-legal"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="contact.html">Contact</a><span>© <span data-year></span> Just Africa.</span><span>Travel thoughtfully. Leave a lighter footprint.</span></div></footer>
+  <script src="assets/js/supabase-config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8"></script><script src="assets/js/ja-common.js"></script><script src="assets/js/main.js" defer></script><script src="assets/js/hotel.js" defer></script>
+</body></html>

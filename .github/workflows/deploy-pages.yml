@@ -47,7 +47,7 @@ jobs:
         run: |
           mkdir _site
           cp index.html destinations.html guides.html listings.html partners.html \
-             account.html dashboard.html privacy.html terms.html contact.html 404.html \
+             account.html dashboard.html privacy.html terms.html contact.html areas.html area.html hotel.html 404.html \
              robots.txt sitemap.xml _site/
           cp -r assets _site/assets
       - name: Upload static site

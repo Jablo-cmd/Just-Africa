@@ -79,7 +79,8 @@
           const { error } = await client.auth.signInWithPassword({ email, password: secret });
           if (error) throw error;
           const next = new URLSearchParams(window.location.search).get("next");
-          window.location.href = next === "listings" ? "listings.html" : "dashboard.html";
+          const hotel = /^hotel-([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/i.exec(next || "");
+          window.location.href = hotel ? "hotel.html?id=" + hotel[1] : next === "listings" ? "listings.html" : "dashboard.html";
         }
       } catch (error) {
         message("auth-message", error.message || "We could not complete that request. Please try again.", "error");
@@ -244,6 +245,7 @@
     const payload = {
       business_id: data.get("business_id"), title,
       slug: slugify(title) + "-" + crypto.randomUUID().slice(0, 8),
+      destination_id: data.get("destination_id") || null,
       listing_type: data.get("listing_type"), description: String(data.get("description")).trim(),
       summary: String(data.get("description")).trim().slice(0, 220),
       price_from: price ? Number(price) : null,
