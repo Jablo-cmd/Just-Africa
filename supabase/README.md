@@ -5,13 +5,14 @@ The site currently ships as static HTML. This folder establishes the database fo
 ## Provisioning
 
 1. Create a dedicated Supabase project for Just Africa. Do not reuse a production project from another product.
-2. Open the SQL Editor and apply `migrations/202610160001_just_africa_core.sql` to that new project, or adopt it into a local Supabase CLI workflow before deploying.
+2. Open the SQL Editor and apply `migrations/202610160001_just_africa_core.sql`, then `migrations/202611010001_hardening_patch.sql` (verification-field privacy, listing/business guards) and `migrations/202611160001_hardening.sql` (least-privilege grants, column-level insert allowlists, length limits, server-recorded verifier, function EXECUTE revokes), to that new project, or adopt it into a local Supabase CLI workflow before deploying.
 3. Review the SQL and run Supabase Database Linter/advisors before accepting real users.
 4. Configure Auth providers, email verification, redirect URLs, SMTP, abuse protection and password policies in the dashboard.
 5. Create a private Storage bucket for business/listing uploads and add narrowly scoped policies. Do not make uploads public by default.
 6. For the current static GitHub Pages frontend, set `url` and `publishableKey` in `assets/js/supabase-config.js`. The publishable key is intentionally public. Never expose a secret/service-role key in browser code. `.env.example` is a template for a future Vite build, not read by the current static pages.
 7. Promote the first admin only through a trusted SQL Editor session after identifying the correct verified account ID, for example `update public.profiles set role = 'admin' where id = '<verified-auth-user-uuid>';`. Never run this from browser code or accept a role from signup metadata.
-8. Verify RLS by testing as anonymous, traveller, business owner, editor and admin before launch.
+8. Add rate limiting/CAPTCHA for public enquiries and reports (not covered by SQL), and turn on Auth email confirmation.
+9. Verify RLS by testing as anonymous, traveller, business owner, editor and admin before launch.
 
 ## Data model
 
