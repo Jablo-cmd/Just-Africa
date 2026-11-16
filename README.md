@@ -39,11 +39,11 @@ Read:
 - [Platform roadmap](docs/PLATFORM_ROADMAP.md)
 - [Environment template](.env.example)
 
-Apply the migration only to a dedicated new/test project after reviewing it. For this static GitHub Pages build, place the project URL and **publishable** key in `assets/js/supabase-config.js` (that key is public by design; never use a service-role/secret key). Configure Auth email verification, redirect URLs, SMTP and abuse protection, then verify the schema and RLS policies as anonymous and authenticated users before using real partner data. The SQL assertions are in `supabase/tests/core_schema_assertions.sql`. `.env.example` documents the variables for a future Vite-based build; the static pages do not read `.env` files.
+Apply the migration only to a dedicated new/test project after reviewing it. For this static GitHub Pages build, place the project URL and **publishable** key in `assets/js/supabase-config.js` (that key is public by design and may be committed; CI rejects service-role/secret keys). Configure Auth email verification, redirect URLs, SMTP and abuse protection, then verify the schema and RLS policies as anonymous and authenticated users before using real partner data. The SQL assertions are in `supabase/tests/core_schema_assertions.sql`. `.env.example` documents the variables for a future Vite-based build; the static pages do not read `.env` files.
 
 ## Deployment
 
-The existing GitHub Actions workflow deploys the static root to GitHub Pages when changes reach `main`. After merging, set **Settings → Pages → Source → GitHub Actions**. Domain and DNS configuration are separate and require a domain you control.
+The GitHub Actions workflow runs the validation checks and then deploys only the site files (HTML pages, `assets/`, `robots.txt`, `sitemap.xml`) to GitHub Pages when changes reach `main`; `docs/`, `supabase/`, `scripts/` and unlinked drafts such as `just-africa-gallery.html` are not published. `sitemap.xml`, `robots.txt` and canonical URLs assume `https://jablo-cmd.github.io/Just-Africa/`; update them if a custom domain is configured. After merging, set **Settings → Pages → Source → GitHub Actions**. Domain and DNS configuration are separate and require a domain you control.
 
 ## Commercial launch checklist
 
